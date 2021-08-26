@@ -69,11 +69,6 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-
-
-
-
-
 //
 //
 // //OAuth Configuration for Outlook
@@ -136,6 +131,20 @@ app.post("/auth/google", function(req, res) {
 });
 
 app.post("/auth/github", function(req, res) {
+  User.findOrCreate({
+    googleId: req.body.googleId,
+    username: req.body.username,
+    email:req.body.email
+  }, function(err) {
+      if (err) {
+        res.send(err.message);
+      } else {
+          res.send("Successful");
+      }
+    });
+});
+
+app.post("/auth/microsoft", function(req, res) {
   User.findOrCreate({
     googleId: req.body.googleId,
     username: req.body.username,
