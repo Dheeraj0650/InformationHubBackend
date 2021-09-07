@@ -8,6 +8,7 @@ const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const findOrCreate = require('mongoose-findorcreate');
 var cors = require('cors');
+var fetch = require("cross-fetch");
 
 const app = express();
 app.use(cors());
@@ -204,9 +205,31 @@ app.get("/logout", function(req, res) {
   res.send("Successful");
 });
 
-app.get("/payment", function(req, res) {
-  res.render("payment");
+
+app.post("/Weather", function(req, res) {
+  var formBody = [];
+  var details = req.body;
+  for (var property in details) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(details[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody.push('appid' + "=" + "e98e494d2485a6f10a35f567bdd96e42");
+  formBody = formBody.join("&");
+  fetch('https://api.openweathermap.org/data/2.5/onecall?' + formBody,{
+    method: 'GET',
+  })
+  .then(function(resp) { return resp.json() }) // Convert data to json
+  .then(function(data) {
+    var data = JSON.stringify(data);
+    res.send(data);
+  })
+  .catch(err => {
+  	console.error(err);
+  });
 });
+
+
 
 let port = process.env.PORT;
 if (port == null || port == "") {
