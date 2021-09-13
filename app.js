@@ -344,6 +344,52 @@ app.post("/air_pollution/history", function(req, res) {
   });
 });
 
+app.post("/geocoding", function(req, res) {
+  var formBody = [];
+  var details = req.body;
+  for (var property in details) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(details[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody.push('appid' + "=" + "e98e494d2485a6f10a35f567bdd96e42");
+  formBody = formBody.join("&");
+  fetch('http://api.openweathermap.org/geo/1.0/direct?' + formBody,{
+    method: 'GET',
+  })
+  .then(function(resp) { return resp.json() }) // Convert data to json
+  .then(function(data) {
+    var data = JSON.stringify(data);
+    res.send(data);
+  })
+  .catch(err => {
+  	console.error(err);
+  });
+});
+
+app.post("/ZipCode", function(req, res) {
+  var formBody = [];
+  var details = req.body;
+  for (var property in details) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(details[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody.push('appid' + "=" + "e98e494d2485a6f10a35f567bdd96e42");
+  formBody = formBody.join("&");
+  fetch('http://api.openweathermap.org/geo/1.0/zip?' + formBody,{
+    method: 'GET',
+  })
+  .then(function(resp) { return resp.json() }) // Convert data to json
+  .then(function(data) {
+    var data = JSON.stringify(data);
+    res.send(data);
+  })
+  .catch(err => {
+  	console.error(err);
+  });
+});
+
 app.post("/find", function(req, res) {
   var formBody = [];
   var details = req.body;
