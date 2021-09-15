@@ -390,6 +390,51 @@ app.post("/ZipCode", function(req, res) {
   });
 });
 
+app.post("/movies/:method", function(req, res) {
+  var formBody = [];
+  var details = req.body;
+  if(req.params.method === "Search"){
+      for (var property in details) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(details[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody.push('api_key' + "=" + "cb261bed9d6fb20d553f67a15b21840e");
+      formBody = formBody.join("&");
+      fetch('https://api.themoviedb.org/3/search/movie?' + formBody,{
+        method: 'GET',
+      })
+      .then(function(resp) { return resp.json() }) // Convert data to json
+      .then(function(data) {
+        var data = JSON.stringify(data);
+        res.send(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+  else if(req.params.method === "Trending"){
+      for (var property in details) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(details[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody.push('api_key' + "=" + "cb261bed9d6fb20d553f67a15b21840e");
+      formBody = formBody.join("&");
+      fetch('https://api.themoviedb.org/3/trending/all/week?' + formBody,{
+        method: 'GET',
+      })
+      .then(function(resp) { return resp.json() }) // Convert data to json
+      .then(function(data) {
+        var data = JSON.stringify(data);
+        res.send(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+});
+
 app.post("/find", function(req, res) {
   var formBody = [];
   var details = req.body;
